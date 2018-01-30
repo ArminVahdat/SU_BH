@@ -1,0 +1,53 @@
+# Check if the fit finds the global minimum by disturbing
+# it using error command. See Simon Vaughan's page :
+# http://www.star.le.ac.uk/~sav2/stats/fit.xcm    
+# Calculate errors in 1 sigma range  
+
+# get the number of parameters
+
+    set numpar [tcloutr modpar]		
+    set numvarpar [tcloutr varpar]
+
+error max 5.0    
+
+set counter0 0
+while {$counter0 <2} { 
+ incr counter0      
+ for {set ipar 1} {$ipar <= $numpar} {incr ipar} {
+     set pardel [lindex [tcloutr param $ipar] 1]    
+     set sparlink [lindex [tcloutr plink $ipar] 0]	    
+     if {$pardel < 0} continue
+     if {$sparlink eq T} continue
+     error 1. $ipar
+ }
+fit 100
+}
+     	       
+for {set ipar 1} {$ipar <= $numpar} {incr ipar} {
+    set pardel [lindex [tcloutr param $ipar] 1] 	    
+    set sparlink [lindex [tcloutr plink $ipar] 0]   
+    if {$pardel < 0} continue
+    if {$sparlink eq T} continue    
+      set doerr 1
+      set delchi 1.0
+      set counter 0   
+      while {$doerr == 1 && $counter < 100} {
+    	incr counter
+    	error stopat 20 0.01 max 5.0 $delchi $ipar	
+    	set perr [lindex [tcloutr error $ipar] 2]
+    	puts "$perr"
+    	if {[string match ???T????? $perr] || [string match ????T???? $perr]} {
+    	 set doerr 0
+       }
+       if [string match F???????? $perr] {
+    	 set doerr 0
+      } else {
+    	 fit 100
+    	 if [string match ?T??????? $perr] {
+    	  set delchi [expr $delchi + 2]
+    	  puts "$delchi"
+         }	
+      }
+   }
+}
+     

@@ -1,0 +1,7 @@
+August 2017
+
+In here I add cflux to both power-law and diskbb component in order to determine
+the unabsorb flux. In the first TCL scripts, the unabsorb fluxes are determined
+with a different method.
+
+

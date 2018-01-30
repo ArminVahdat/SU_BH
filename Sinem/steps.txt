@@ -1,0 +1,5 @@
+.r read_powerdat_ssm.pro
+print, tag_names(data_tmp)
+data_tmp.sigma01
+print,transpose(data_tmp.sigma01)
+plot,mjd,data_tmp.sigma01,psym=4

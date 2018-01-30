@@ -1,0 +1,711 @@
+#XSPEC version: 12.9.0n
+#Build Date/Time: Fri May 27 13:24:05 2016
+#
+!XSPEC12>data 1:1 myspectrum_e3.pha;
+#
+#1 spectrum  in use
+# 
+#Spectral Data File: myspectrum_e3.pha  Spectrum 1
+#Net count rate (cts/s) for Spectrum:1  1.856e-01 +/- 5.530e-03
+# Assigned to Data Group 1 and Plot Group 1
+#  Noticed Channels:  1-110
+#  Telescope: NONE Instrument: NONE  Channel Type: PI
+#  Exposure Time: 1 sec
+# Using fit statistic: chi
+# Using test statistic: chi
+# Using Response (RMF) File            myresponse_e3.rsp for Source 1
+#
+#
+!XSPEC12>resp 1 myresponse_e3.rsp;
+#
+!XSPEC12>response 1 myresponse_e3.rsp
+#Response successfully loaded.
+#
+!XSPEC12>setplot en;
+#
+!XSPEC12>ig bad;
+#
+!XSPEC12>ignore bad
+#
+#ignore:     0 channels ignored from  source number 1
+#
+!XSPEC12>show data;
+#
+#1 file 1 spectrum 
+#Spectrum 1  Spectral Data File: myspectrum_e3.pha
+#Net count rate (cts/s) for Spectrum:1  1.856e-01 +/- 5.530e-03
+# Assigned to Data Group 1 and Plot Group 1
+#  Noticed Channels:  1-110
+#  Telescope: NONE Instrument: NONE  Channel Type: PI
+#  Exposure Time: 1 sec
+# Using fit statistic: chi
+# Using test statistic: chi
+# Using Response (RMF) File            myresponse_e3.rsp for Source 1
+#
+#
+!XSPEC12>query yes;
+#
+!XSPEC12>cpd /xw;
+#
+!XSPEC12>plot lda;
+#
+!XSPEC12>mo phabs(bbody)  ;  3.4,-1  ;  3;
+#
+!XSPEC12>model phabs(bbody) ; 3.4,-1 ; 3
+#
+#========================================================================
+#Model phabs<1>*bbody<2> Source No.: 1   Active/On
+#Model Model Component  Parameter  Unit     Value
+# par  comp
+#   1    1   phabs      nH         10^22    3.40000      frozen
+#   2    2   bbody      kT         keV      3.00000      +/-  0.0          
+#   3    2   bbody      norm                1.00000      +/-  0.0          
+#________________________________________________________________________
+#
+#
+#Fit statistic : Chi-Squared =   2.322122e+08 using 110 PHA bins.
+#
+#Test statistic : Chi-Squared =   2.322122e+08 using 110 PHA bins.
+# Reduced chi-squared =   2.150113e+06 for    108 degrees of freedom 
+# Null hypothesis probability =   0.000000e+00
+# Current data and model not fit yet.
+#
+!XSPEC12>fit 100		 ;
+#                                   Parameters
+#Chi-Squared  |beta|/N    Lvl          2:kT        3:norm
+#4726.23      56.7316      -3       2.91983    0.00521020
+#4725.52      403.199      -4       2.90049    0.00520865
+#4725.48      24.164       -5       2.89561    0.00520756
+#4725.47      1.63915      -6       2.89436    0.00520724
+#==============================
+# Variances and Principal Axes
+#                 2        3  
+# 6.5581E-04| -1.0000  -0.0003  
+# 4.2199E-09|  0.0003  -1.0000  
+#------------------------------
+#
+#========================
+#  Covariance Matrix
+#        1           2   
+#   6.558e-04   1.749e-07
+#   1.749e-07   4.267e-09
+#------------------------
+#
+#========================================================================
+#Model phabs<1>*bbody<2> Source No.: 1   Active/On
+#Model Model Component  Parameter  Unit     Value
+# par  comp
+#   1    1   phabs      nH         10^22    3.40000      frozen
+#   2    2   bbody      kT         keV      2.89436      +/-  2.56089E-02  
+#   3    2   bbody      norm                5.20724E-03  +/-  6.53191E-05  
+#________________________________________________________________________
+#
+#
+#Fit statistic : Chi-Squared =        4725.47 using 110 PHA bins.
+#
+#Test statistic : Chi-Squared =        4725.47 using 110 PHA bins.
+# Reduced chi-squared =        43.7544 for    108 degrees of freedom 
+# Null hypothesis probability =   0.000000e+00
+#
+!XSPEC12>pl lda euf chi;
+#
+!XSPEC12>plot lda euf chi
+#
+!XSPEC12>set moind "_bb";
+#
+!XSPEC12>show parameters;
+#
+#Parameters defined:
+#========================================================================
+#Model phabs<1>*bbody<2> Source No.: 1   Active/On
+#Model Model Component  Parameter  Unit     Value
+# par  comp
+#   1    1   phabs      nH         10^22    3.40000      frozen
+#   2    2   bbody      kT         keV      2.89436      +/-  2.56089E-02  
+#   3    2   bbody      norm                5.20724E-03  +/-  6.53191E-05  
+#________________________________________________________________________
+#
+#
+!XSPEC12>@getinfo_ssm;
+#
+!XSPEC12>if {[tcloutr modcomp] == "0"} {;       puts "You must set up a model first";       return;    };
+#
+!XSPEC12>tcloutr modcomp
+#
+!XSPEC12>tcloutr modcomp
+#
+!XSPEC12>if {[tcloutr datasets] == "0"} {;       puts "You must set read in data first";       return;    } ;
+#
+!XSPEC12>tcloutr datasets
+#
+!XSPEC12>tcloutr filename 1
+#
+!XSPEC12>set sourcefile1 [tcloutr filename 1];
+#
+!XSPEC12>string last / $sourcefile1
+#
+!XSPEC12>::tcl::string::last / /home/itu/Dropbox/Zeta/Graduate_Thesis/ARMIN_SOFTWARE/Sinem/arminxspecv2/myspectrum_e3.pha
+#
+!XSPEC12>set index [string last / $sourcefile1];
+#
+!XSPEC12>if { $index == "-1" } {;       set path "";    } else {;       set path [string range $sourcefile1 0 $index];    	set index [expr $index+1];       set last [expr [string length $sourcefile1]-1];    	set sourcefile1 [string range $sourcefile1 $index $last];      };
+#
+!XSPEC12>string range $sourcefile1 0 $index
+#
+!XSPEC12>::tcl::string::range /home/itu/Dropbox/Zeta/Graduate_Thesis/ARMIN_SOFTWARE/Sinem/arminxspecv2/myspectrum_e3.pha 0 72
+#
+!XSPEC12>set path [string range $sourcefile1 0 $index]
+#
+!XSPEC12>expr $index+1
+#
+!XSPEC12>set index [expr $index+1]
+#
+!XSPEC12>string length $sourcefile1
+#
+!XSPEC12>::tcl::string::length /home/itu/Dropbox/Zeta/Graduate_Thesis/ARMIN_SOFTWARE/Sinem/arminxspecv2/myspectrum_e3.pha
+#
+!XSPEC12>expr [string length $sourcefile1]-1
+#
+!XSPEC12>set last [expr [string length $sourcefile1]-1]
+#
+!XSPEC12>string range $sourcefile1 $index $last
+#
+!XSPEC12>::tcl::string::range /home/itu/Dropbox/Zeta/Graduate_Thesis/ARMIN_SOFTWARE/Sinem/arminxspecv2/myspectrum_e3.pha 73 89
+#
+!XSPEC12>set sourcefile1 [string range $sourcefile1 $index $last]
+#
+!XSPEC12>tcloutr backgrnd 1
+#
+!XSPEC12>string trim [tcloutr backgrnd 1]
+#
+!XSPEC12>::tcl::string::trim {}
+#
+!XSPEC12>set backfile1 [string trim [tcloutr backgrnd 1]];
+#
+!XSPEC12>if {$backfile1 eq ""} {set backfile1 "none"};
+#
+!XSPEC12>set backfile1 "none"
+#
+!XSPEC12>tcloutr response 1
+#
+!XSPEC12>string trim [tcloutr response 1]
+#
+!XSPEC12>::tcl::string::trim {myresponse_e3.rsp }
+#
+!XSPEC12>set respfile1 [string trim [tcloutr response 1]];
+#
+!XSPEC12>if {$respfile1 eq ""} {set respfile1 "none"};
+#
+!XSPEC12>tcloutr expos 1
+#
+!XSPEC12>set time1 [tcloutr expos 1]    ;
+#
+!XSPEC12>tclout expos 1;
+#
+!XSPEC12>lindex $xspec_tclout 0
+#
+!XSPEC12>set expos_pca [lindex $xspec_tclout 0]   ;
+#
+!XSPEC12>tclout rate 1;
+#
+!XSPEC12>lindex $xspec_tclout 0
+#
+!XSPEC12>set rate_pca [lindex $xspec_tclout 0];
+#
+!XSPEC12>lindex $xspec_tclout 1
+#
+!XSPEC12>set rate_pca_err [lindex $xspec_tclout 1]        ;
+#
+!XSPEC12>tclout param 1    ;
+#
+!XSPEC12>scan $xspec_tclout "%f" nH;
+#
+!XSPEC12>split $sourcefile1 "_"
+#
+!XSPEC12>lindex [split $sourcefile1 "_"] 0
+#
+!XSPEC12>set bname [lindex [split $sourcefile1 "_"] 0];
+#
+!XSPEC12>split $sourcefile1 "_"
+#
+!XSPEC12>lindex [split $sourcefile1 "_"] 1
+#
+!XSPEC12>split [lindex [split $sourcefile1 "_"] 1] "."
+#
+!XSPEC12>lindex [split [lindex [split $sourcefile1 "_"] 1] "."] 0
+#
+!XSPEC12>set bind [lindex [split [lindex [split $sourcefile1 "_"] 1] "."] 0] ;
+#
+!XSPEC12>set rootname $bname;
+#
+!XSPEC12>append rootname "_$bind";
+#
+!XSPEC12>set FITSfile "$rootname$moind.fits";
+#
+!XSPEC12>file exists $FITSfile
+#
+!XSPEC12>set FITSfileexists [file exists $FITSfile]  ;
+#
+!XSPEC12>tcloutr modpar
+#
+!XSPEC12>set numpar [tcloutr modpar]		;
+#
+!XSPEC12>tcloutr varpar
+#
+!XSPEC12>set numvarpar [tcloutr varpar];
+#
+!XSPEC12>puts "Run the error calc. script";
+#Run the error calc. script
+#
+!XSPEC12>puts "@calcerr_ssm.xcm";
+#@calcerr_ssm.xcm
+#
+!XSPEC12>puts "@writeinfo_ssm.xcm";
+#@writeinfo_ssm.xcm
+#
+!XSPEC12> @calcerr_ssm.xcm
+#
+!XSPEC12>tcloutr modpar
+#
+!XSPEC12>set numpar [tcloutr modpar]		;
+#
+!XSPEC12>tcloutr varpar
+#
+!XSPEC12>set numvarpar [tcloutr varpar];
+#
+!XSPEC12>error max 5.0    ;
+#*** Parameter 1 is not a variable model parameter and no confidence range will be calculated.
+#Cannot do error calc: Reduced Chi^2 (= 43.7544) > maximum (5)
+#
+!XSPEC12> @writeinfo_ssm.xcm
+#
+!XSPEC12>setplot delete all  ;
+#
+!XSPEC12>file exists $FITSfile
+#
+!XSPEC12>set FITSfileexists [file exists $FITSfile]        ;
+#
+!XSPEC12>if { $FITSfileexists == 1 } {;     rm -rf $FITSfile;    }    ;
+#
+!XSPEC12>rm -rf $FITSfile
+#
+!XSPEC12>file exists $rootname$moind.dat
+#
+!XSPEC12>set wdatfileexists [file exists $rootname$moind.dat];
+#
+!XSPEC12>if { $wdatfileexists == 1} {;      rm -f $rootname$moind.dat;    };
+#
+!XSPEC12>rm -f $rootname$moind.dat
+#
+!XSPEC12>file exists $rootname$moind.xcm
+#
+!XSPEC12>set xcmfileexists [file exists $rootname$moind.xcm];
+#
+!XSPEC12>if { $xcmfileexists == 1} {;      rm -f $rootname$moind.xcm;    }    ;
+#
+!XSPEC12>rm -f $rootname$moind.xcm
+#
+!XSPEC12>tcloutr model
+#
+!XSPEC12>set model [tcloutr model];
+#
+!XSPEC12>lindex $model 0
+#
+!XSPEC12>set extstr [lindex $model 0]  ;
+#
+!XSPEC12>tcloutr stat
+#
+!XSPEC12>set chisq [tcloutr stat];
+#
+!XSPEC12>tcloutr dof
+#
+!XSPEC12>lindex [tcloutr dof] 0
+#
+!XSPEC12>set dof [lindex [tcloutr dof] 0];
+#
+!XSPEC12>expr $chisq/$dof
+#
+!XSPEC12>set rchi2 [expr $chisq/$dof] ;
+#
+!XSPEC12>tcloutr nullhyp
+#
+!XSPEC12>set nhyp [tcloutr nullhyp];
+#
+!XSPEC12>for {set ipar 1} {$ipar <= $numpar} {incr ipar} {;       if {[scan [tcloutr param $ipar] "%f %f" tmp1 tmp2] == 2} {;	   set sparval($ipar) $tmp1;	   set spardel($ipar) $tmp2;	  scan [tcloutr error $ipar] "%f %f" sparerrlow($ipar) sparerrhi($ipar);	} else {;	   set sparval($ipar) $tmp1;	   set spardel($ipar) -1;	};    };
+#
+!XSPEC12>set ipar 1
+#
+!XSPEC12>if {[scan [tcloutr param $ipar] "%f %f" tmp1 tmp2] == 2} {;	   set sparval($ipar) $tmp1;	   set spardel($ipar) $tmp2;	  scan [tcloutr error $ipar] "%f %f" sparerrlow($ipar) sparerrhi($ipar);	} else {;	   set sparval($ipar) $tmp1;	   set spardel($ipar) -1;	}
+#
+!XSPEC12>tcloutr param $ipar
+#
+!XSPEC12>scan [tcloutr param $ipar] "%f %f" tmp1 tmp2
+#
+!XSPEC12>set sparval($ipar) $tmp1
+#
+!XSPEC12>set spardel($ipar) $tmp2
+#
+!XSPEC12>tcloutr error $ipar
+#
+!XSPEC12>scan [tcloutr error $ipar] "%f %f" sparerrlow($ipar) sparerrhi($ipar)
+#
+!XSPEC12>incr ipar
+#
+!XSPEC12>if {[scan [tcloutr param $ipar] "%f %f" tmp1 tmp2] == 2} {;	   set sparval($ipar) $tmp1;	   set spardel($ipar) $tmp2;	  scan [tcloutr error $ipar] "%f %f" sparerrlow($ipar) sparerrhi($ipar);	} else {;	   set sparval($ipar) $tmp1;	   set spardel($ipar) -1;	}
+#
+!XSPEC12>tcloutr param $ipar
+#
+!XSPEC12>scan [tcloutr param $ipar] "%f %f" tmp1 tmp2
+#
+!XSPEC12>set sparval($ipar) $tmp1
+#
+!XSPEC12>set spardel($ipar) $tmp2
+#
+!XSPEC12>tcloutr error $ipar
+#
+!XSPEC12>scan [tcloutr error $ipar] "%f %f" sparerrlow($ipar) sparerrhi($ipar)
+#
+!XSPEC12>incr ipar
+#
+!XSPEC12>if {[scan [tcloutr param $ipar] "%f %f" tmp1 tmp2] == 2} {;	   set sparval($ipar) $tmp1;	   set spardel($ipar) $tmp2;	  scan [tcloutr error $ipar] "%f %f" sparerrlow($ipar) sparerrhi($ipar);	} else {;	   set sparval($ipar) $tmp1;	   set spardel($ipar) -1;	}
+#
+!XSPEC12>tcloutr param $ipar
+#
+!XSPEC12>scan [tcloutr param $ipar] "%f %f" tmp1 tmp2
+#
+!XSPEC12>set sparval($ipar) $tmp1
+#
+!XSPEC12>set spardel($ipar) $tmp2
+#
+!XSPEC12>tcloutr error $ipar
+#
+!XSPEC12>scan [tcloutr error $ipar] "%f %f" sparerrlow($ipar) sparerrhi($ipar)
+#
+!XSPEC12>incr ipar
+#
+!XSPEC12>set txtfile $FITSfile;
+#
+!XSPEC12>append txtfile "-txt";
+#
+!XSPEC12>rm -f $txtfile;
+#
+!XSPEC12>open $txtfile w
+#
+!XSPEC12>set fileid [open $txtfile w];
+#
+!XSPEC12>set outstr "$bname $sourcefile1 $backfile1 $respfile1 ;    		$time1 $rate_pca $rate_pca_err $chisq $dof $nhyp ";
+#
+!XSPEC12>for {set ipar 1} {$ipar <= $numpar} {incr ipar} {;	if { $spardel($ipar) > 0 } {;	    append outstr "$sparval($ipar) $sparerrlow($ipar) $sparerrhi($ipar) "	    ;	} else {;	    append outstr "$sparval($ipar) ";	};    };
+#
+!XSPEC12>set ipar 1
+#
+!XSPEC12>if { $spardel($ipar) > 0 } {;	    append outstr "$sparval($ipar) $sparerrlow($ipar) $sparerrhi($ipar) "	    ;	} else {;	    append outstr "$sparval($ipar) ";	}
+#
+!XSPEC12>append outstr "$sparval($ipar) "
+#
+!XSPEC12>incr ipar
+#
+!XSPEC12>if { $spardel($ipar) > 0 } {;	    append outstr "$sparval($ipar) $sparerrlow($ipar) $sparerrhi($ipar) "	    ;	} else {;	    append outstr "$sparval($ipar) ";	}
+#
+!XSPEC12>append outstr "$sparval($ipar) $sparerrlow($ipar) $sparerrhi($ipar) "	    
+#
+!XSPEC12>incr ipar
+#
+!XSPEC12>if { $spardel($ipar) > 0 } {;	    append outstr "$sparval($ipar) $sparerrlow($ipar) $sparerrhi($ipar) "	    ;	} else {;	    append outstr "$sparval($ipar) ";	}
+#
+!XSPEC12>append outstr "$sparval($ipar) $sparerrlow($ipar) $sparerrhi($ipar) "	    
+#
+!XSPEC12>incr ipar
+#
+!XSPEC12>puts $fileid $outstr;
+#
+!XSPEC12>close $fileid;
+#
+!XSPEC12>set cdfile $FITSfile;
+#
+!XSPEC12>append cdfile "-cd";
+#
+!XSPEC12>rm -f $cdfile;
+#
+!XSPEC12>open $cdfile w
+#
+!XSPEC12>set fileid [open $cdfile w];
+#
+!XSPEC12>puts $fileid "BURST 10A";
+#
+!XSPEC12>puts $fileid "PHAFILE1 33A"          ;
+#
+!XSPEC12>puts $fileid "BACKFILE1 29A"         ;
+#
+!XSPEC12>puts $fileid "RESPFILE1 24A"  ;
+#
+!XSPEC12>puts $fileid "EXPOSURE1 E seconds" ;
+#
+!XSPEC12>puts $fileid "RATEPCA E counts/s";
+#
+!XSPEC12>puts $fileid "ERATEPCA E counts/s"                   ;
+#
+!XSPEC12>puts $fileid "STATISTIC E CHI2";
+#
+!XSPEC12>puts $fileid "DOF E";
+#
+!XSPEC12>puts $fileid "NullHyp E";
+#
+!XSPEC12>for {set ipar 1} {$ipar <= $numpar} {incr ipar} {;	if { $spardel($ipar) > 0 } {;	    set punit " ";	    scan [tcloutr pinfo $ipar] "%s %s" pname punit;	    puts $fileid [concat $pname$ipar " E " $punit];	    puts $fileid [concat E$pname$ipar " 2E " $punit]       ;	} else { 	;	    set punit " ";	    scan [tcloutr pinfo $ipar] "%s %s" pname punit;	    puts $fileid [concat $pname$ipar " E " $punit];	};		;    };
+#
+!XSPEC12>set ipar 1
+#
+!XSPEC12>if { $spardel($ipar) > 0 } {;	    set punit " ";	    scan [tcloutr pinfo $ipar] "%s %s" pname punit;	    puts $fileid [concat $pname$ipar " E " $punit];	    puts $fileid [concat E$pname$ipar " 2E " $punit]       ;	} else { 	;	    set punit " ";	    scan [tcloutr pinfo $ipar] "%s %s" pname punit;	    puts $fileid [concat $pname$ipar " E " $punit];	}
+#
+!XSPEC12>set punit " "
+#
+!XSPEC12>tcloutr pinfo $ipar
+#
+!XSPEC12>scan [tcloutr pinfo $ipar] "%s %s" pname punit
+#
+!XSPEC12>concat $pname$ipar " E " $punit
+#
+!XSPEC12>puts $fileid [concat $pname$ipar " E " $punit]
+#
+!XSPEC12>incr ipar
+#
+!XSPEC12>if { $spardel($ipar) > 0 } {;	    set punit " ";	    scan [tcloutr pinfo $ipar] "%s %s" pname punit;	    puts $fileid [concat $pname$ipar " E " $punit];	    puts $fileid [concat E$pname$ipar " 2E " $punit]       ;	} else { 	;	    set punit " ";	    scan [tcloutr pinfo $ipar] "%s %s" pname punit;	    puts $fileid [concat $pname$ipar " E " $punit];	}
+#
+!XSPEC12>set punit " "
+#
+!XSPEC12>tcloutr pinfo $ipar
+#
+!XSPEC12>scan [tcloutr pinfo $ipar] "%s %s" pname punit
+#
+!XSPEC12>concat $pname$ipar " E " $punit
+#
+!XSPEC12>puts $fileid [concat $pname$ipar " E " $punit]
+#
+!XSPEC12>concat E$pname$ipar " 2E " $punit
+#
+!XSPEC12>puts $fileid [concat E$pname$ipar " 2E " $punit]       
+#
+!XSPEC12>incr ipar
+#
+!XSPEC12>if { $spardel($ipar) > 0 } {;	    set punit " ";	    scan [tcloutr pinfo $ipar] "%s %s" pname punit;	    puts $fileid [concat $pname$ipar " E " $punit];	    puts $fileid [concat E$pname$ipar " 2E " $punit]       ;	} else { 	;	    set punit " ";	    scan [tcloutr pinfo $ipar] "%s %s" pname punit;	    puts $fileid [concat $pname$ipar " E " $punit];	}
+#
+!XSPEC12>set punit " "
+#
+!XSPEC12>tcloutr pinfo $ipar
+#
+!XSPEC12>scan [tcloutr pinfo $ipar] "%s %s" pname punit
+#
+!XSPEC12>concat $pname$ipar " E " $punit
+#
+!XSPEC12>puts $fileid [concat $pname$ipar " E " $punit]
+#
+!XSPEC12>concat E$pname$ipar " 2E " $punit
+#
+!XSPEC12>puts $fileid [concat E$pname$ipar " 2E " $punit]       
+#
+!XSPEC12>incr ipar
+#
+!XSPEC12>close $fileid;
+#
+!XSPEC12>set plstr "";
+#
+!XSPEC12>open $rootname$moind.txt w
+#
+!XSPEC12>set fileid [open $rootname$moind.txt w];
+#
+!XSPEC12>puts $fileid "$bname $extstr Fit Results";
+#
+!XSPEC12>puts $fileid "----------------------------------------------------";
+#
+!XSPEC12>puts $fileid "PCA Expos   : $time1";
+#
+!XSPEC12>puts $fileid "PCA Rate    : $rate_pca"			 ;
+#
+!XSPEC12>puts $fileid "chi2	    : $chisq";
+#
+!XSPEC12>puts $fileid "dof	    : $dof"		   ;
+#
+!XSPEC12>string range $chisq 0 3
+#
+!XSPEC12>::tcl::string::range 4725.47 0 3
+#
+!XSPEC12>puts $fileid "rchi2	    : [string range $chisq 0 3]/$dof = $rchi2"  	;
+#
+!XSPEC12>puts $fileid "NullHyp   : $nhyp"		 ;
+#
+!XSPEC12>for {set ipar 1} {$ipar <= $numpar} {incr ipar} {;     set sparlink [lindex [tcloutr plink $ipar] 0] ;     if { $spardel($ipar) > 0 } {;      set punit " ";      scan [tcloutr pinfo $ipar] "%s %s" pname punit;      puts $fileid "[concat $pname$ipar]   : $sparval($ipar) ";      puts $fileid "[concat E$pname$ipar]  : $sparerrlow($ipar) $sparerrhi($ipar) ";      append plstr "[concat $pname$ipar]=[string range $sparval($ipar) 0 3] " ;      append plstr "+/- ([string range [expr $sparerrhi($ipar) - $sparval($ipar)] 0 3]) ; "     	    ;     } else {;      set punit " ";      scan [tcloutr pinfo $ipar] "%s %s" pname punit;      puts $fileid "[concat $pname$ipar]   : $sparval($ipar) ";      ;     };     ;    };
+#
+!XSPEC12>set ipar 1
+#
+!XSPEC12>tcloutr plink $ipar
+#
+!XSPEC12>lindex [tcloutr plink $ipar] 0
+#
+!XSPEC12>set sparlink [lindex [tcloutr plink $ipar] 0] 
+#
+!XSPEC12>if { $spardel($ipar) > 0 } {;      set punit " ";      scan [tcloutr pinfo $ipar] "%s %s" pname punit;      puts $fileid "[concat $pname$ipar]   : $sparval($ipar) ";      puts $fileid "[concat E$pname$ipar]  : $sparerrlow($ipar) $sparerrhi($ipar) ";      append plstr "[concat $pname$ipar]=[string range $sparval($ipar) 0 3] " ;      append plstr "+/- ([string range [expr $sparerrhi($ipar) - $sparval($ipar)] 0 3]) ; "     	    ;     } else {;      set punit " ";      scan [tcloutr pinfo $ipar] "%s %s" pname punit;      puts $fileid "[concat $pname$ipar]   : $sparval($ipar) ";      ;     }
+#
+!XSPEC12>set punit " "
+#
+!XSPEC12>tcloutr pinfo $ipar
+#
+!XSPEC12>scan [tcloutr pinfo $ipar] "%s %s" pname punit
+#
+!XSPEC12>concat $pname$ipar
+#
+!XSPEC12>puts $fileid "[concat $pname$ipar]   : $sparval($ipar) "
+#
+!XSPEC12>incr ipar
+#
+!XSPEC12>tcloutr plink $ipar
+#
+!XSPEC12>lindex [tcloutr plink $ipar] 0
+#
+!XSPEC12>set sparlink [lindex [tcloutr plink $ipar] 0] 
+#
+!XSPEC12>if { $spardel($ipar) > 0 } {;      set punit " ";      scan [tcloutr pinfo $ipar] "%s %s" pname punit;      puts $fileid "[concat $pname$ipar]   : $sparval($ipar) ";      puts $fileid "[concat E$pname$ipar]  : $sparerrlow($ipar) $sparerrhi($ipar) ";      append plstr "[concat $pname$ipar]=[string range $sparval($ipar) 0 3] " ;      append plstr "+/- ([string range [expr $sparerrhi($ipar) - $sparval($ipar)] 0 3]) ; "     	    ;     } else {;      set punit " ";      scan [tcloutr pinfo $ipar] "%s %s" pname punit;      puts $fileid "[concat $pname$ipar]   : $sparval($ipar) ";      ;     }
+#
+!XSPEC12>set punit " "
+#
+!XSPEC12>tcloutr pinfo $ipar
+#
+!XSPEC12>scan [tcloutr pinfo $ipar] "%s %s" pname punit
+#
+!XSPEC12>concat $pname$ipar
+#
+!XSPEC12>puts $fileid "[concat $pname$ipar]   : $sparval($ipar) "
+#
+!XSPEC12>concat E$pname$ipar
+#
+!XSPEC12>puts $fileid "[concat E$pname$ipar]  : $sparerrlow($ipar) $sparerrhi($ipar) "
+#
+!XSPEC12>concat $pname$ipar
+#
+!XSPEC12>string range $sparval($ipar) 0 3
+#
+!XSPEC12>::tcl::string::range 2.89436 0 3
+#
+!XSPEC12>append plstr "[concat $pname$ipar]=[string range $sparval($ipar) 0 3] " 
+#
+!XSPEC12>expr $sparerrhi($ipar) - $sparval($ipar)
+#
+!XSPEC12>string range [expr $sparerrhi($ipar) - $sparval($ipar)] 0 3
+#
+!XSPEC12>::tcl::string::range -2.89436 0 3
+#
+!XSPEC12>append plstr "+/- ([string range [expr $sparerrhi($ipar) - $sparval($ipar)] 0 3]) ; "     	    
+#
+!XSPEC12>incr ipar
+#
+!XSPEC12>tcloutr plink $ipar
+#
+!XSPEC12>lindex [tcloutr plink $ipar] 0
+#
+!XSPEC12>set sparlink [lindex [tcloutr plink $ipar] 0] 
+#
+!XSPEC12>if { $spardel($ipar) > 0 } {;      set punit " ";      scan [tcloutr pinfo $ipar] "%s %s" pname punit;      puts $fileid "[concat $pname$ipar]   : $sparval($ipar) ";      puts $fileid "[concat E$pname$ipar]  : $sparerrlow($ipar) $sparerrhi($ipar) ";      append plstr "[concat $pname$ipar]=[string range $sparval($ipar) 0 3] " ;      append plstr "+/- ([string range [expr $sparerrhi($ipar) - $sparval($ipar)] 0 3]) ; "     	    ;     } else {;      set punit " ";      scan [tcloutr pinfo $ipar] "%s %s" pname punit;      puts $fileid "[concat $pname$ipar]   : $sparval($ipar) ";      ;     }
+#
+!XSPEC12>set punit " "
+#
+!XSPEC12>tcloutr pinfo $ipar
+#
+!XSPEC12>scan [tcloutr pinfo $ipar] "%s %s" pname punit
+#
+!XSPEC12>concat $pname$ipar
+#
+!XSPEC12>puts $fileid "[concat $pname$ipar]   : $sparval($ipar) "
+#
+!XSPEC12>concat E$pname$ipar
+#
+!XSPEC12>puts $fileid "[concat E$pname$ipar]  : $sparerrlow($ipar) $sparerrhi($ipar) "
+#
+!XSPEC12>concat $pname$ipar
+#
+!XSPEC12>string range $sparval($ipar) 0 3
+#
+!XSPEC12>::tcl::string::range 0.00520724 0 3
+#
+!XSPEC12>append plstr "[concat $pname$ipar]=[string range $sparval($ipar) 0 3] " 
+#
+!XSPEC12>expr $sparerrhi($ipar) - $sparval($ipar)
+#
+!XSPEC12>string range [expr $sparerrhi($ipar) - $sparval($ipar)] 0 3
+#
+!XSPEC12>::tcl::string::range -0.00520724 0 3
+#
+!XSPEC12>append plstr "+/- ([string range [expr $sparerrhi($ipar) - $sparval($ipar)] 0 3]) ; "     	    
+#
+!XSPEC12>incr ipar
+#
+!XSPEC12>close $fileid;
+#
+!XSPEC12>save all $rootname$moind.xcm;
+#
+!XSPEC12>cpd /xw;
+#
+!XSPEC12>pl lda del;
+#
+!XSPEC12>plot lda del
+#
+!XSPEC12>setplot command WIN 1;
+#
+!XSPEC12>setplot command LOC 0.05 0.05 1. 1.    ;
+#
+!XSPEC12>setplot command LAB  Y  Counts sec\\\u-1 \\\dkeV\\\u-1\\\d;
+#
+!XSPEC12>setplot command WIN  2;
+#
+!XSPEC12>setplot command LOC 0.05 0.05 1. 1.      ;
+#
+!XSPEC12>setplot command LAB  X  Energy (keV);
+#
+!XSPEC12>setplot command WIN  ALL;
+#
+!XSPEC12>setplot command lw 2.5;
+#
+!XSPEC12>setplot command cs 1.1;
+#
+!XSPEC12>setplot command time off;
+#
+!XSPEC12>setplot command r x 2.0 60.0 ;
+#
+!XSPEC12>setplot command r y2 -4.5 4.5;
+#
+!XSPEC12>string range $chisq 0 3
+#
+!XSPEC12>::tcl::string::range 4725.47 0 3
+#
+!XSPEC12>string range $rchi2 0 3
+#
+!XSPEC12>::tcl::string::range 43.75435185185185 0 3
+#
+!XSPEC12>setplot command LA ot "$bname ; $extstr ; rchi2: [string range $chisq 0 3]/$dof = [string range $rchi2 0 3] "    ;
+#
+!XSPEC12>setplot command LA t "$plstr" ;
+#
+!XSPEC12>setplot command wdata $rootname$moind.dat;
+#
+!XSPEC12>setplot device $rootname$moind.ps/cps;
+#
+!XSPEC12>pl lda del    ;
+#
+!XSPEC12>plot lda del
+#
+!XSPEC12>setplot delete 15    ;
+#
+!XSPEC12>setplot device none;
+#
+!XSPEC12>set moeuf "_eeuf";
+#
+!XSPEC12>setplot device $rootname$moind$moeuf.ps/cps     ;
+#
+!XSPEC12>plot eeuf;
+#
+!XSPEC12>setplot device none;
+#
+!XSPEC12>ftcreate cdfile=$cdfile datafile=$txtfile extname="$extstr" history=YES outfile=$FITSfile;
+#/home/itu/Documents/heasoft/x86_64-unknown-linux-gnu-libc2.23-0/bin/ftcreate
+#
+!XSPEC12> exit
+# XSPEC: quit
+#

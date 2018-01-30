@@ -1,0 +1,16 @@
+I copied alldo to USEFUL_SCRIPTS.
+It uses 2 IDL programs, coltimex.pro and rxte_synfou.pro which I copied under IDL in USEFUL SCRIPTS
+
+In alldo, you need to correct the raw files directory
+#correct this directory for ostroda
+
+obspath=~/RXTE/DATA_AN/RAW/AO${AO}/P${propid}/
+
+and your obsids must be under AOX/PXXXXX f(for example an an obsid starting with 70133 must be under AO7/P70133) 
+
+
+I placed two scripts for automatic fitting and writing the results in a text file. Those are called: fit_pca_smpowdisktg.xcm fit_ph_smpowdiskth.xcm
+
+You need to start the fit yourself with the right model, and then you can run fit_pca_smpowdisktg and then fit_ph_smpowdiskth.xcm
+
+investigate scripts, understand what they do and see if you can run them

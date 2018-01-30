@@ -1,0 +1,14 @@
+statistic chi
+data 1:1 myspectrum_e3.pha
+response  1:1 myresponse_e3.rsp
+
+method leven 100 0.01
+abund angr
+xsect bcmc
+cosmo 70 0 0.73
+xset delta 0.01
+systematic 0
+model  phabs*bbody
+            3.4         -1          0          0     100000      1e+06
+        2.89436       0.01     0.0001       0.01        100        200
+     0.00520724       0.01          0          0      1e+20      1e+24

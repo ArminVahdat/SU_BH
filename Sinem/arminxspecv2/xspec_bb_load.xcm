@@ -1,0 +1,22 @@
+log 475274776_s7.log
+data 1:1 myspectrum_e3.pha
+resp 1 myresponse_e3.rsp
+setplot en
+ig bad
+#ig 1:**-2.0 1:30.0-**
+show data
+query yes
+cpd /xw
+plot lda
+mo phabs(bbody)
+3.4,-1
+3 
+ 
+fit 100		 
+pl lda euf chi
+set moind "_bb"
+show parameters
+@getinfo_ssm
+puts "@calcerr_ssm.xcm"
+puts "@writeinfo_ssm.xcm"
+

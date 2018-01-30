@@ -1,0 +1,41 @@
+log 475274776_s7.log
+data 1:1 myspectrum_e3.pha
+resp 1 myresponse_e3.rsp
+setplot en
+#ig bad
+#ig 1:**-2.0 1:30.0-**
+show data
+query yes
+cpd /xw
+plot lda
+mo propfluc
+26.237
+3.90697
+3.0,-1 
+0.9,-1
+0.0,-1
+0.318726
+28.9577
+3.3,-1
+5.78088
+7.72725
+0.487572
+0.214456
+0.105578
+5.70625e-06
+5.39
+4.18063
+10,-1
+0.95,-1
+30,-1
+2.0,-1
+1,-1
+1,-1
+fit 100		 
+pl lda euf chi
+set moind "_bb"
+show parameters
+@getinfo_ssm
+puts "@calcerr_ssm.xcm"
+puts "@writeinfo_ssm.xcm"
+

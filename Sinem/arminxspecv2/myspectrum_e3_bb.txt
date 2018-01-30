@@ -1,0 +1,13 @@
+myspectrum phabs*bbody Fit Results
+----------------------------------------------------
+PCA Expos   : 1
+PCA Rate    : 0.185565
+chi2	    : 4725.47
+dof	    : 108
+rchi2	    : 4725/108 = 43.75435185185185
+NullHyp   : 0
+nH1   : 3.4 
+kT2   : 2.89436 
+EkT2  : 0.0 0.0 
+norm3   : 0.00520724 
+Enorm3  : 0.0 0.0 

@@ -1,0 +1,189 @@
+# rm previous outputs and clear setplot subcommand list
+
+    setplot delete all  
+    
+    set FITSfileexists [file exists $FITSfile]        
+
+    if { $FITSfileexists == 1 } {
+     rm -rf $FITSfile
+    }    
+
+    set wdatfileexists [file exists $rootname$moind.dat]
+    if { $wdatfileexists == 1} {
+      rm -f $rootname$moind.dat
+    }
+    
+    set xcmfileexists [file exists $rootname$moind.xcm]
+    if { $xcmfileexists == 1} {
+      rm -f $rootname$moind.xcm
+    }    
+
+# get the model name for input to the fits extension name
+
+    set model [tcloutr model]
+    set extstr [lindex $model 0]  
+
+# get the stat information
+
+    set chisq [tcloutr stat]
+    set dof [lindex [tcloutr dof] 0]
+    set rchi2 [expr $chisq/$dof] 
+    set nhyp [tcloutr nullhyp]
+
+# get parameter info for writing to the fits file
+ 
+    for {set ipar 1} {$ipar <= $numpar} {incr ipar} {
+       if {[scan [tcloutr param $ipar] "%f %f" tmp1 tmp2] == 2} {
+	   set sparval($ipar) $tmp1
+	   set spardel($ipar) $tmp2
+	  scan [tcloutr error $ipar] "%f %f" sparerrlow($ipar) sparerrhi($ipar)
+	} else {
+	   set sparval($ipar) $tmp1
+	   set spardel($ipar) -1
+	}
+    }
+    
+# open a text version of the output fits file
+
+    set txtfile $FITSfile
+    append txtfile "-txt"
+    rm -f $txtfile
+    set fileid [open $txtfile w]
+
+# write the text output
+
+    set outstr "$bname $sourcefile1 $backfile1 $respfile1 
+    		$time1 $rate_pca $rate_pca_err $chisq $dof $nhyp "
+    for {set ipar 1} {$ipar <= $numpar} {incr ipar} {
+	if { $spardel($ipar) > 0 } {
+	    append outstr "$sparval($ipar) $sparerrlow($ipar) $sparerrhi($ipar) "	    
+	} else {
+	    append outstr "$sparval($ipar) "
+	}
+    }
+    
+    puts $fileid $outstr
+    
+    close $fileid
+
+# create a temporary file for the column descriptors
+
+    set cdfile $FITSfile
+    append cdfile "-cd"
+    rm -f $cdfile
+    set fileid [open $cdfile w]
+
+    puts $fileid "BURST 10A"
+    puts $fileid "PHAFILE1 33A"          
+    puts $fileid "BACKFILE1 29A"         
+    puts $fileid "RESPFILE1 24A"  
+    puts $fileid "EXPOSURE1 E seconds" 
+    puts $fileid "RATEPCA E counts/s"
+    puts $fileid "ERATEPCA E counts/s"                   
+    puts $fileid "STATISTIC E CHI2"
+    puts $fileid "DOF E"
+    puts $fileid "NullHyp E"
+    
+    for {set ipar 1} {$ipar <= $numpar} {incr ipar} {
+	if { $spardel($ipar) > 0 } {
+	    set punit " "
+	    scan [tcloutr pinfo $ipar] "%s %s" pname punit
+	    puts $fileid [concat $pname$ipar " E " $punit]
+	    puts $fileid [concat E$pname$ipar " 2E " $punit]       
+	} else { 	
+	    set punit " "
+	    scan [tcloutr pinfo $ipar] "%s %s" pname punit
+	    puts $fileid [concat $pname$ipar " E " $punit]
+	}
+		
+    }
+    
+    close $fileid
+    
+
+# create a proper text output listing the parameters for easy 
+# and quick inspection
+
+    set plstr ""
+
+    set fileid [open $rootname$moind.txt w]
+    puts $fileid "$bname $extstr Fit Results"
+    puts $fileid "----------------------------------------------------"
+    puts $fileid "PCA Expos   : $time1"
+    puts $fileid "PCA Rate    : $rate_pca"			 
+    puts $fileid "chi2	    : $chisq"
+    puts $fileid "dof	    : $dof"		   
+    puts $fileid "rchi2	    : [string range $chisq 0 3]/$dof = $rchi2"  	
+    puts $fileid "NullHyp   : $nhyp"		 
+    for {set ipar 1} {$ipar <= $numpar} {incr ipar} {
+     set sparlink [lindex [tcloutr plink $ipar] 0] 
+     if { $spardel($ipar) > 0 } {
+      set punit " "
+      scan [tcloutr pinfo $ipar] "%s %s" pname punit
+      puts $fileid "[concat $pname$ipar]   : $sparval($ipar) "
+      puts $fileid "[concat E$pname$ipar]  : $sparerrlow($ipar) $sparerrhi($ipar) "
+      #if {$sparlink eq T} continue 
+      #if {$pname eq "norm"} continue     
+      append plstr "[concat $pname$ipar]=[string range $sparval($ipar) 0 3] " 
+      append plstr "+/- ([string range [expr $sparerrhi($ipar) - $sparval($ipar)] 0 3]) ; "     	    
+     } else {
+      set punit " "
+      scan [tcloutr pinfo $ipar] "%s %s" pname punit
+      puts $fileid "[concat $pname$ipar]   : $sparval($ipar) "
+      
+     }
+     
+    }
+    
+    close $fileid
+
+    save all $rootname$moind.xcm
+
+    cpd /xw
+    pl lda del
+
+    setplot command WIN 1
+    setplot command LOC 0.05 0.05 1. 1.    
+    setplot command LAB  Y  Counts sec\\\u-1 \\\dkeV\\\u-1\\\d
+    setplot command WIN  2
+    setplot command LOC 0.05 0.05 1. 1.      
+    setplot command LAB  X  Energy (keV)
+    setplot command WIN  ALL
+    setplot command lw 2.5
+    setplot command cs 1.1
+    setplot command time off
+    setplot command r x 2.0 60.0 
+    setplot command r y2 -4.5 4.5
+    setplot command LA ot "$bname ; $extstr ; rchi2: [string range $chisq 0 3]/$dof = [string range $rchi2 0 3] "    
+    setplot command LA t "$plstr" 
+
+# save a qdp data file and delete setplot subcommand
+ 
+    setplot command wdata $rootname$moind.dat
+
+# plot the data
+        
+    setplot device $rootname$moind.ps/cps
+    pl lda del    
+     
+    setplot delete 15    
+     
+# plot eeuf spectrum
+
+    setplot device none
+    set moeuf "_eeuf"
+    setplot device $rootname$moind$moeuf.ps/cps     
+    plot eeuf
+    setplot device none
+
+
+# create a FITS file with the parameter and stat output
+       
+    ftcreate cdfile=$cdfile datafile=$txtfile extname="$extstr" history=YES outfile=$FITSfile
+
+
+
+
+
+
+

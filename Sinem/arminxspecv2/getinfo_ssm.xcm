@@ -1,0 +1,69 @@
+# gets basic, model independent information from the data
+
+# before using this script load the data and model
+
+    if {[tcloutr modcomp] == "0"} {
+       puts "You must set up a model first"
+       return
+    }
+    if {[tcloutr datasets] == "0"} {
+       puts "You must set read in data first"
+       return
+    } 
+
+# get the names of the files
+
+    set sourcefile1 [tcloutr filename 1]
+                
+    set index [string last / $sourcefile1]
+    if { $index == "-1" } {
+       set path ""
+    } else {
+       set path [string range $sourcefile1 0 $index]
+    	set index [expr $index+1]
+       set last [expr [string length $sourcefile1]-1]
+    	set sourcefile1 [string range $sourcefile1 $index $last]
+      }
+  
+    set backfile1 [string trim [tcloutr backgrnd 1]]
+    if {$backfile1 eq ""} {set backfile1 "none"}
+    #if {[file exists $backfile1] == 1} {set backfile1 [lindex [split $backfile1 "/"] 8]}
+    
+    set respfile1 [string trim [tcloutr response 1]]
+    if {$respfile1 eq ""} {set respfile1 "none"}
+    #if {[file exists $respfile1] == 1} {set respfile1 [lindex [split $respfile1 "/"] 8]} 
+    
+          
+# get the exposure and rate params for sourcefile 1              
+    
+    set time1 [tcloutr expos 1]    
+    tclout expos 1
+    set expos_pca [lindex $xspec_tclout 0]   
+    tclout rate 1
+    set rate_pca [lindex $xspec_tclout 0]
+    set rate_pca_err [lindex $xspec_tclout 1]        
+	         
+# get the nH value
+    
+    tclout param 1    
+    scan $xspec_tclout "%f" nH
+          
+# get the name for saving files
+
+    set bname [lindex [split $sourcefile1 "_"] 0]
+    set bind [lindex [split [lindex [split $sourcefile1 "_"] 1] "."] 0] 
+       
+    set rootname $bname
+    append rootname "_$bind"
+    set FITSfile "$rootname$moind.fits"
+    set FITSfileexists [file exists $FITSfile]  
+
+              	        
+# we will need to know the number of parameters
+
+    set numpar [tcloutr modpar]		
+    set numvarpar [tcloutr varpar]
+    
+# Some reminder    
+    
+    puts "Run the error calc. script"

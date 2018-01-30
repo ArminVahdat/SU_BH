@@ -1,0 +1,122 @@
+# this procedure does all the eqpair fits and errors for the case of a single absorption in the ultrasoft state
+
+# needs shakefit
+
+# error stopat <nn> <tol> max <max-chi> <del-chi> <par>
+
+  proc shakefit { fileout } {
+    tclout modpar                         ;# find number of parameters
+    set nopar $xspec_tclout
+#     set nopar 24
+    for {set j 1} {$j <= $nopar} {incr j} {
+       tclout param $j
+       set pdel [lindex $xspec_tclout 1]   ;# get parameter delta
+       if {$pdel < 0} continue             ;# if frozen goto next param
+       set doerror 1
+       set delchi 2.706                    ;# delta-chi^2 to probe
+       set counter 0
+       while {$doerror == 1 && $counter < 100} {
+          incr counter
+          error stopat 10 0.1 max 50.0 $delchi $j
+	  echo $counter $delchi $j
+          tclout error $j
+          set errout [lindex $xspec_tclout 2]
+          if {[string match ???T????? $errout] || [string match ????T???? $errout]} {
+            set doerror 0                ;# Hit lower/upper limits
+          }
+          if [string match F???????? $errout] {
+             set doerror 0                ;# Not found better fit
+             set errres $xspec_tclout
+             tclout pinfo $j
+             set compname [lindex $xspec_tclout 0]
+             puts $fileout "$j $compname $errres"
+          } else {
+             fit 100 0.01                 ;# Found better fit
+             if [string match ?T??????? $errout] {
+                set delchi [expr $delchi + 2] ;# increase if non-monotonic
+             }                            ;# End IF (?F)
+          }                               ;# End IF (F?)
+       }                                  ;# End WHILE
+    }                                     ;# End FOR
+  }                                       ;# End PROC
+
+# ----------------------------------------------------------
+
+log propfluc.log
+
+query yes
+
+#load the data
+
+@xspec_initload.xcm
+
+#load propfluc
+
+@load.xcm
+
+#load the initial model
+
+@start.xcm
+
+set fileout [open propfl_results.dat w]
+
+#write down the start time
+
+#set systemTime [clock seconds]
+#set now [clock format $systemTime]
+#puts $fileout "$now "
+
+#puts $fileout "Start with reflection and xi free, smedge and a single absorption"
+
+# check nth/th ratio, if exactly 0, change it to a very small number
+
+#tclout par 12
+#set nthrat [lindex $xspec_tclout 0] 
+
+#if { $nthrat == 0. } { newpar 12 1E-5}
+
+fit 100 0.01
+
+# save model for later use
+
+if {[file exists initfit.xcm]} { file delete initfit.xcm }
+save model initfit.xcm
+
+# Get the fit statistic and DOF
+
+tclout stat
+set chi1 $xspec_tclout
+tclout dof
+set dof1 [lindex $xspec_tclout 0]
+
+#write down the model to the text file
+
+#shakefit
+
+shakefit $fileout
+
+if {[file exists result.xcm]} { file delete result.xcm }
+save model result.xcm
+
+# Get the fit statistic and DOF
+
+tclout stat
+set chi1 $xspec_tclout
+tclout dof
+set dof1 [lindex $xspec_tclout 0]
+
+#record chi2
+
+puts $fileout "CHI2/DOF: $chi1 $dof1"
+
+#write down fluxes
+
+close $fileout
+
+#  Reset everything
+
+data none
+model none
+
+# end of script
+
